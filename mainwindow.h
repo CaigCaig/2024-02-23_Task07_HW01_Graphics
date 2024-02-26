@@ -15,10 +15,12 @@
 #include <QtCharts>
 #include <QChartView>
 
-//#include "qcustomplot.h"
+#include "qcustomplot.h"
 #include "graphic.h"
 
 #define FD 1000.0 //частота дискретизации
+
+#define NUM_GRAPH 1
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -49,8 +51,6 @@ private slots:
     void ReceiveData();
 
 
-
-
 private:
     Ui::MainWindow *ui;
     Graphic* winGraph;
@@ -61,10 +61,13 @@ private:
     QVector<double> procesData;
     QVector<double> mins, maxs;
 
-    Graphic *graphClass;
+    //Graphic *graphClass;
 
+    QCustomPlot *wGraphic;      // Объявляем объект QCustomPlot
+    QCPGraph *graph;     // Объявляем объект для вертикальной линии
+    QCPItemTracer *tracer;      // Трасировщик по точкам графика
 
 signals:
-    void sig_data_graphic_ready(void);
+    void sig_data_graphic_ready();
 };
 #endif // MAINWINDOW_H

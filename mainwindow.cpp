@@ -7,7 +7,13 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->pb_clearResult->setCheckable(true);
+
+    //graphClass = new Graphic();
+
+    wGraphic = new QCustomPlot();
     winGraph = new Graphic(this);
+    //ui->gridLayout->addWidget(winGraph, 0, 0, 1, 1);
+    graph = new QCPGraph(wGraphic->xAxis, wGraphic->yAxis);
 
     connect (this, &MainWindow::sig_data_graphic_ready, this, &MainWindow::ReceiveData);
 
@@ -230,6 +236,22 @@ void MainWindow::on_pb_start_clicked()
                                                  * и вызов сигнала для отображения графика
                                                  */
 
+                                                QVector<double> x, y;
+                                                x.resize(1000);
+                                                y.resize(x.size());
+                                                wGraphic->clearGraphs();
+                                                wGraphic->xAxis->setLabel("x");
+                                                wGraphic->yAxis->setLabel("y");
+                                                for (auto i = 0; i < x.size(); i++)
+                                                {
+                                                    x[i] = i;
+                                                    y[i] = res[i];
+                                                    graph->addData(x[i], y[i]);
+                                                }
+                                                //graph->addData(x, y);
+                                                wGraphic->addGraph(wGraphic->xAxis, wGraphic->yAxis);
+                                                wGraphic->rescaleAxes();
+
                                                 emit sig_data_graphic_ready();
                                              };
 
@@ -240,20 +262,7 @@ void MainWindow::on_pb_start_clicked()
 
 void MainWindow::ReceiveData()
 {
+    wGraphic->replot();
     winGraph->show();
-    /*
-    winGraph->clearGraphs();
-    winGraph->clearGraphs();
-    winGraph->addGraph();
-    winGraph->xAxis->setLabel("x");
-    winGraph->yAxis->setLabel("y");
-    for (auto i = 0; i < 1000; i++)
-    {
-        winGraph->add
-        ui->cp_graph->graph()->addData(data[i], i);
-    }
-    winGraph->replot();
-    */
 }
-
 
