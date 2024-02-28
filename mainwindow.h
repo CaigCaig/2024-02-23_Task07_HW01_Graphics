@@ -51,6 +51,8 @@ private slots:
     void ReceiveData();
 
 
+    void on_pb_clearResult_clicked();
+
 private:
     Ui::MainWindow *ui;
     Graphic* winGraph;

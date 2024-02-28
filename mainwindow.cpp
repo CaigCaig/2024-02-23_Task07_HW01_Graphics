@@ -11,9 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
     //graphClass = new Graphic();
 
     wGraphic = new QCustomPlot();
-    winGraph = new Graphic(this);
-    //ui->gridLayout->addWidget(winGraph, 0, 0, 1, 1);
+    //winGraph = new Graphic(this);
     graph = new QCPGraph(wGraphic->xAxis, wGraphic->yAxis);
+    wGraphic->setGeometry(0, 0, 1600, 900);
 
     connect (this, &MainWindow::sig_data_graphic_ready, this, &MainWindow::ReceiveData);
 
@@ -239,18 +239,19 @@ void MainWindow::on_pb_start_clicked()
                                                 QVector<double> x, y;
                                                 x.resize(1000);
                                                 y.resize(x.size());
-                                                wGraphic->clearGraphs();
+                                                //graph->setData(x, y);
+                                                wGraphic->graph()->data()->clear();
                                                 wGraphic->xAxis->setLabel("x");
                                                 wGraphic->yAxis->setLabel("y");
                                                 for (auto i = 0; i < x.size(); i++)
                                                 {
                                                     x[i] = i;
                                                     y[i] = res[i];
-                                                    graph->addData(x[i], y[i]);
                                                 }
-                                                //graph->addData(x, y);
+                                                graph->setData(x, y);
                                                 wGraphic->addGraph(wGraphic->xAxis, wGraphic->yAxis);
                                                 wGraphic->rescaleAxes();
+
 
                                                 emit sig_data_graphic_ready();
                                              };
@@ -260,9 +261,22 @@ void MainWindow::on_pb_start_clicked()
                                .then(findMax);
 }
 
+/****************************************************/
+/*!
+@brief:	Обработчик клика на кнопку "Очистить"
+*/
+/****************************************************/
+void MainWindow::on_pb_clearResult_clicked()
+{
+    QVector<double> x(1000), y(1000);
+    graph->setData(x, y);
+    wGraphic->addGraph(wGraphic->xAxis, wGraphic->yAxis);
+    wGraphic->replot();
+    wGraphic->show();
+}
+
 void MainWindow::ReceiveData()
 {
     wGraphic->replot();
-    winGraph->show();
+    wGraphic->show();
 }
-
